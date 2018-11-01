@@ -1,0 +1,16 @@
+swagger: '2.0'
+info:
+  title: Very simple energy API
+  version: "0.1"
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /tick:
+    get:
+      summary: Signal one tick (13.3Wh)
+      operationId: api.tick
+      responses:
+        200:
+          description: Successful upload
