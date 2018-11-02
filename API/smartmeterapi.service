@@ -5,8 +5,6 @@ After=network.target
 [Service]
 ExecStart=/home/pi/smartmeter/API/venv/bin/python /home/pi/smartmeter/API/api.py
 WorkingDirectory=/home/pi/smartmeter/API
-StandardOutput=inherit
-StandardError=inherit
 Restart=always
 User=pi
 
