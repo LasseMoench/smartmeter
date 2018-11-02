@@ -1,6 +1,6 @@
 # ESP8266 Smart Energy Meter
 
-This project aims to build a smart energy meter, getting readings from our ferraris counter (which we are not allowed to modify) by detecting a red stripe on a spinning wheel using an IR-diode and an IR-receiver.
+This project aims to build a smart energy meter, getting readings from our ferraris energy meter (which we are not allowed to modify) by detecting a red stripe on a spinning wheel using an IR-diode and an IR-receiver.
 
 ## Setting up the API
 On the machine that shall run the API, clone the repository and install the requirements listed in requirements.txt (maybe you will want to use a virtualenv or something like this). You are now ready to run the API using
