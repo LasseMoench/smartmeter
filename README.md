@@ -15,7 +15,10 @@ You can use the provided systemd service file as an example to run the API as a 
 
 ## Setting up the ESP
 
-Upload the sketch to the ESP, connect the IR-LED, the IR-receiver and the resistor (wiring diagram will (hopefully) follow soon). Attach the ESP to your computer and hold it to the Ferraris counter. Find a position that works best (where you have a clear change in the readings when the red stripe passes). Fix it. Set the correct IP, WiFi-password and name in the ESP as well as a threshold level that works for you. For me, the reading would drop from 200 to 100 while the red stripe was on, so I chose 150 as a threshold.
+Upload the sketch to the ESP, connect the IR-LED, the IR-receiver and the resistor like shown in the wiring diagram. Attach the ESP to your computer and hold it to the Ferraris counter. Find a position that works best (where you have a clear change in the readings when the red stripe passes). Fix it. Set the correct IP, WiFi-password and name in the ESP as well as a threshold level that works for you. For me, the reading would drop from 200 to 100 while the red stripe was on, so I chose 150 as a threshold.
+
+![Wiring Breadboard View](SmartMeter.png?raw=true "Smart Meter")
+![Wiring Schematic View](SmartMeterSchematic.png?raw=true "Smart Meter Schematic")
 
 ## Acknowledgments
 
