@@ -13,4 +13,40 @@ paths:
       operationId: api.tick
       responses:
         200:
-          description: Successful upload
+          description: Successful tick
+
+  /frontendinfo:
+    get:
+      summary: Get a number of different values to show on the frontend
+      operationId: api.get_frontend_info
+      responses:
+        200:
+          description: Successful request
+          schema:
+            $ref: '#/definitions/frontend_info'
+
+definitions:
+  frontend_info:
+    type: object
+    required:
+      - avg_daily_power
+      - current_power
+      - daily_power
+      - total_power
+    properties:
+      avg_daily_power:
+        type: number
+        format: float
+        description: Average power consumption per day
+      current_power:
+        type: number
+        format: float
+        description: Current power consumption
+      daily_power:
+        type: number
+        format: float
+        description: Power consumption since 00:00h
+      total_power:
+        type: number
+        format: float
+        description: Total power consumption

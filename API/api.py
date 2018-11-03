@@ -1,7 +1,7 @@
 import connexion
 import sqlite3
 import time
-from datetime import datetime
+from datetime import datetime, time as dttime
 
 conn = sqlite3.connect('energy.db')
 c = conn.cursor()
@@ -15,6 +15,24 @@ def tick():
 
     c.execute("INSERT INTO energy VALUES ({})".format(ts))
     conn.commit()
+
+
+def get_frontend_info():
+
+    c.execute("SELECT Count(*) FROM energy")
+    total_power_in_db = c.fetchone()
+    total_power = int(total_power_in_db) * 13.33333 + 25477.1
+
+    midnight = datetime.combine(datetime.today(), dttime.min)
+    c.execute("SELECT Count(*) FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
+    ticks_today = c.fetchone()
+    daily_power = int(ticks_today) * 13.33333
+
+    # TODO: Implement average daily power here for each day
+
+    # TODO: Implement current power draw (select last two ticks and calc power from that)
+
+    return daily_power, total_power
 
 
 app = connexion.App(__name__)
