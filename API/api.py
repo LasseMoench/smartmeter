@@ -1,4 +1,5 @@
 import connexion
+from flask import render_template, make_response
 import sqlite3
 import time
 from datetime import datetime, time as dttime
@@ -11,22 +12,21 @@ c.execute('CREATE TABLE IF NOT EXISTS energy(timestamp INTEGER)')
 def tick():
     ts = time.time()
     print("13Wh consumed! Timestamp is: {}. Time readable: {}.".format(ts, datetime.utcfromtimestamp(ts).strftime(
-            '%H:%M:%S %d-%m-%Y')))
+        '%H:%M:%S %d-%m-%Y')))
 
     c.execute("INSERT INTO energy VALUES ({})".format(ts))
     conn.commit()
 
 
-def get_frontend_info():
-
+def render_html():
     c.execute("SELECT Count(*) FROM energy")
     total_power_in_db = c.fetchone()
-    total_power = int(total_power_in_db[0]) * 13.33333 + 25477100
+    total_power = float('%.2f' % (total_power_in_db[0] * 13.33333 + 25477100))
 
     midnight = datetime.combine(datetime.today(), dttime.min)
     c.execute("SELECT Count(*) FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
     ticks_today = c.fetchone()
-    daily_power = int(ticks_today[0]) * 13.33333
+    daily_power = float('%.2f' % (ticks_today[0] * 13.33333))
 
     # TODO: Implement average daily power here for each day
 
@@ -36,15 +36,12 @@ def get_frontend_info():
     time_diff_secs = last_2_timestamps[0][0] - last_2_timestamps[1][0]
 
     # Time it took to consume 13.3Wh extrapolated to hourly energy use
-    current_power = 13.33333 / time_diff_secs * 3600
+    current_power = float('%.2f' % (13.33333 / time_diff_secs * 3600))
 
-    frontend_info = {
-        "current_power": float('%.2f' % current_power),
-        "daily_power": float('%.2f' % daily_power),
-        "total_power": float('%.2f' % total_power)
-    }
+    headers = {'Content-Type': 'text/html'}
 
-    return frontend_info, 200, {'Access-Control-Allow-Origin': '*'}
+    return make_response(render_template('index.html', current_power=current_power, total_power=total_power,
+                                         daily_power=daily_power), 200, headers)
 
 
 app = connexion.App(__name__)

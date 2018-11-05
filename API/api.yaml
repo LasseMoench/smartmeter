@@ -15,33 +15,10 @@ paths:
         200:
           description: Successful tick
 
-  /frontendinfo:
+  /energyinfo:
     get:
-      summary: Get a number of different values to show on the frontend
-      operationId: api.get_frontend_info
+      summary: Get an html website to show some info
+      operationId: api.render_html
       responses:
         200:
           description: Successful request
-          schema:
-            $ref: '#/definitions/frontend_info'
-
-definitions:
-  frontend_info:
-    type: object
-    required:
-      - current_power
-      - daily_power
-      - total_power
-    properties:
-      current_power:
-        type: number
-        format: float
-        description: Current power consumption
-      daily_power:
-        type: number
-        format: float
-        description: Power consumption since 00:00h
-      total_power:
-        type: number
-        format: float
-        description: Total power consumption
