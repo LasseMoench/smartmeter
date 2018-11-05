@@ -6,7 +6,7 @@
     <script>
         console.log("Hello I am running!");
         hostname = window.location.hostname;
-        fetch(hostname + ':8080/frontendinfo')
+        fetch('http://' + hostname + ':8080/frontendinfo')
             .then(function(response) {
                 return response.json();
             })
