@@ -67,7 +67,7 @@ void loop() {
       stripeCount = 0;
 
       //Report the stripe to the API
-      if (client.connect(apiIP, 8080)){
+      if (client.connect(apiIP, 80)){
         // we are connected to the host!
         client.print(String("GET /tick") + " HTTP/1.1\r\n" +
              "Host: " + apiIP + "\r\n" +

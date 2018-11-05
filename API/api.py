@@ -21,7 +21,7 @@ def tick():
 def render_html():
     c.execute("SELECT Count(*) FROM energy")
     total_power_in_db = c.fetchone()
-    total_power = float('%.2f' % (total_power_in_db[0] * 13.33333 + 25477100))
+    total_power = float('%.2f' % (total_power_in_db[0] * 13.33333 + 25503550))
 
     midnight = datetime.combine(datetime.today(), dttime.min)
     c.execute("SELECT Count(*) FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
