@@ -12,7 +12,6 @@ itsdangerous==1.1.0
 Jinja2==2.10
 jsonschema==2.6.0
 MarkupSafe==1.0
-pyqtgraph==0.10.0
 pytz==2018.7
 PyYAML==3.13
 requests==2.20.0
