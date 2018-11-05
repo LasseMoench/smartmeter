@@ -12,9 +12,16 @@ itsdangerous==1.1.0
 Jinja2==2.10
 jsonschema==2.6.0
 MarkupSafe==1.0
+numpy==1.15.4
+PyQt5==5.11.3
+PyQt5-sip==4.19.13
+pyqtgraph==0.10.0
+pytz==2018.7
 PyYAML==3.13
 requests==2.20.0
 six==1.11.0
 swagger-spec-validator==2.4.1
+tzlocal==1.5.1
 urllib3==1.24
+uWSGI==2.0.17.1
 Werkzeug==0.14.1
