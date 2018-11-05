@@ -21,18 +21,30 @@ def get_frontend_info():
 
     c.execute("SELECT Count(*) FROM energy")
     total_power_in_db = c.fetchone()
-    total_power = int(total_power_in_db) * 13.33333 + 25477.1
+    total_power = int(total_power_in_db[0]) * 13.33333 + 25477.1
 
     midnight = datetime.combine(datetime.today(), dttime.min)
     c.execute("SELECT Count(*) FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
     ticks_today = c.fetchone()
-    daily_power = int(ticks_today) * 13.33333
+    daily_power = int(ticks_today[0]) * 13.33333
 
     # TODO: Implement average daily power here for each day
 
-    # TODO: Implement current power draw (select last two ticks and calc power from that)
+    c.execute("SELECT * FROM energy ORDER BY energy._ROWID_ DESC LIMIT 2")
+    last_2_timestamps = c.fetchall()
 
-    return daily_power, total_power
+    time_diff_secs = last_2_timestamps[0][0] - last_2_timestamps[1][0]
+
+    # Time it took to consume 13.3Wh extrapolated to hourly energy use
+    current_power = 13.33333 / time_diff_secs * 3600
+
+    frontend_info = {
+        "current_power": current_power,
+        "daily_power": daily_power,
+        "total_power": total_power
+    }
+
+    return frontend_info, 200, {'Access-Control-Allow-Origin': '*'}
 
 
 app = connexion.App(__name__)

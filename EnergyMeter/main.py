@@ -31,7 +31,7 @@ class Main(QtGui.QMainWindow):
         if database_path is not None:
             self.database_path = database_path
         else:
-            self.database_path = "/home/sridhar/PycharmProjects/smartmeter/API/energy.db"
+            self.database_path = "/tmp/energy.db"
 
         if not path.exists(self.database_path):
             print("Invalid/non-existent database file requested, quitting!", file=sys.stderr)

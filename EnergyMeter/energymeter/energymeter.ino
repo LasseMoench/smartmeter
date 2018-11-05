@@ -12,7 +12,7 @@ const int threshold = 150;
 
 // Wi-Fi Settings
 const char* ssid = "Bergernetz"; // your wireless network name (SSID)
-const char* password = "SuperSecretPassword"; // your Wi-Fi network password
+const char* password = "GrummelKeks1"; // your Wi-Fi network password
 const char* apiIP = "192.168.0.38";
 
 void setup() {
