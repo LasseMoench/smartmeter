@@ -53,9 +53,8 @@ application = app.app
 
 
 def main():
-    # Run our standalone gevent server
     app.debug = False
-    app.run(port=8080, server='gevent', host='0.0.0.0')
+    app.run(host='0.0.0.0')
 
 
 if __name__ == '__main__':
