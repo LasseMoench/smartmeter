@@ -5,15 +5,16 @@
     <title>Bergerhöhle Energy Consumption</title>
     <script>
         console.log("Hello I am running!");
-        fetch('http://localhost:8080/frontendinfo')
+        hostname = window.location.hostname;
+        fetch(hostname + ':8080/frontendinfo')
             .then(function(response) {
                 return response.json();
             })
             .then(function(frontendInfo) {
                 console.log(JSON.stringify(frontendInfo));
-                document.getElementById("current_power").innerHTML = frontendInfo["current_power"];
-                document.getElementById("daily_power").innerHTML = frontendInfo["daily_power"];
-                document.getElementById("total_power").innerHTML = frontendInfo["total_power"];
+                document.getElementById("current_power").innerHTML = frontendInfo["current_power"] + ' W';
+                document.getElementById("daily_power").innerHTML = frontendInfo["daily_power"] + ' Wh';
+                document.getElementById("total_power").innerHTML = frontendInfo["total_power"] / 1000 + ' kWh';
             });
     </script>
 </head>

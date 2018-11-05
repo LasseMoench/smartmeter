@@ -21,7 +21,7 @@ def get_frontend_info():
 
     c.execute("SELECT Count(*) FROM energy")
     total_power_in_db = c.fetchone()
-    total_power = int(total_power_in_db[0]) * 13.33333 + 25477.1
+    total_power = int(total_power_in_db[0]) * 13.33333 + 25477100
 
     midnight = datetime.combine(datetime.today(), dttime.min)
     c.execute("SELECT Count(*) FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
@@ -39,9 +39,9 @@ def get_frontend_info():
     current_power = 13.33333 / time_diff_secs * 3600
 
     frontend_info = {
-        "current_power": current_power,
-        "daily_power": daily_power,
-        "total_power": total_power
+        "current_power": float('%.2f' % current_power),
+        "daily_power": float('%.2f' % daily_power),
+        "total_power": float('%.2f' % total_power)
     }
 
     return frontend_info, 200, {'Access-Control-Allow-Origin': '*'}
@@ -57,8 +57,8 @@ application = app.app
 
 def main():
     # Run our standalone gevent server
-    app.debug = True
-    app.run(port=8080, server='gevent')
+    app.debug = False
+    app.run(port=8080, server='gevent', host='0.0.0.0')
 
 
 if __name__ == '__main__':
