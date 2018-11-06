@@ -1,12 +1,14 @@
 [Unit]
-Description=Smart Meter API service
+Description=uWSGI instance to serve the smart meter api
 After=network.target
 
 [Service]
-ExecStart=/home/pi/smartmeter/API/venv/bin/python /home/pi/smartmeter/API/api.py
+Environment="PATH=/home/pi/smartmeter/API/venv/bin"
 WorkingDirectory=/home/pi/smartmeter/API
 Restart=always
 User=pi
+Group=www-data
+ExecStart=/home/pi/smartmeter/API/venv/bin/uwsgi --ini api.ini
 
 [Install]
 WantedBy=multi-user.target

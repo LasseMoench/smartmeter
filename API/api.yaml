@@ -13,4 +13,12 @@ paths:
       operationId: api.tick
       responses:
         200:
-          description: Successful upload
+          description: Successful tick
+
+  /energyinfo:
+    get:
+      summary: Get an html website to show some info
+      operationId: api.render_html
+      responses:
+        200:
+          description: Successful request
