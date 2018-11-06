@@ -3,6 +3,7 @@ from flask import render_template, make_response
 import sqlite3
 import time
 from datetime import datetime, time as dttime
+import json
 
 conn = sqlite3.connect('energy.db')
 c = conn.cursor()
@@ -38,10 +39,14 @@ def render_html():
     # Time it took to consume 13.3Wh extrapolated to hourly energy use
     current_power = float('%.2f' % (13.33333 / time_diff_secs * 3600))
 
+    c.execute("SELECT * FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
+    histogram_data = c.fetchall()
+
     headers = {'Content-Type': 'text/html'}
 
     return make_response(render_template('index.html', current_power=current_power, total_power=total_power,
-                                         daily_power=daily_power), 200, headers)
+                                         daily_power=daily_power, histogram_data=json.dumps(histogram_data)), 200,
+                         headers)
 
 
 app = connexion.App(__name__)
@@ -53,7 +58,9 @@ application = app.app
 
 
 def main():
-    app.run(host='::')
+    # Run our standalone gevent server
+    app.debug = True
+    app.run(port=8080, server='gevent')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,6 @@
+numpy==1.15.4
+PyQt5==5.11.3
+PyQt5-sip==4.19.13
+pyqtgraph==0.10.0
+pytz==2018.7
+tzlocal==1.5.1
