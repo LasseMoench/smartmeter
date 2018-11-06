@@ -51,7 +51,7 @@ class Main(QtGui.QMainWindow):
         self.main_tool_box_dock.setWidget(self.main_tool_box)
         self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.main_tool_box_dock, QtCore.Qt.Horizontal)
 
-        self.read_interval = 5000  # milliseconds
+        self.read_interval = 10000  # milliseconds
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update_plot)
         self.timer.setInterval(self.read_interval)
@@ -187,7 +187,7 @@ class MainToolBox(QtWidgets.QWidget):
         w = QtGui.QWidget()
         y = QtGui.QWidget()
         l1 = QtGui.QLabel("X Range:")
-        l2 = QtGui.QLabel("Bin Step:")
+        l2 = QtGui.QLabel("Bin Step (in seconds):")
         self.errorLabel = QtGui.QLabel()
         self.errorLabel.setStyleSheet("color: rgb(255, 0, 0);")
 
@@ -220,9 +220,9 @@ class MainToolBox(QtWidgets.QWidget):
         self.histStyleCheckbox.setText("Step Mode")
         self.histStyleCheckbox.setCheckState(QtCore.Qt.Checked)
 
-        self.ghl1.addWidget(self.rangeMinusBtn)
-        self.ghl1.addWidget(self.rangeEdit)
-        self.ghl1.addWidget(self.rangePlusBtn)
+        # self.ghl1.addWidget(self.rangeMinusBtn)
+        # self.ghl1.addWidget(self.rangeEdit)
+        # self.ghl1.addWidget(self.rangePlusBtn)
 
         self.ghl2.addWidget(self.binStepMinusBtn)
         self.ghl2.addWidget(self.binStepEdit)
@@ -236,8 +236,8 @@ class MainToolBox(QtWidgets.QWidget):
 
         self.histogram_options_layout.addWidget(l2, 0, 0, 1, 2)
         self.histogram_options_layout.addWidget(y, 0, 2, 1, 2)
-        self.histogram_options_layout.addWidget(l1, 1, 0, 1, 2)
-        self.histogram_options_layout.addWidget(w, 1, 2, 1, 2)
+        # self.histogram_options_layout.addWidget(l1, 1, 0, 1, 2)
+        # self.histogram_options_layout.addWidget(w, 1, 2, 1, 2)
         self.histogram_options_layout.addWidget(self.histStyleCheckbox, 0, 4, 1, 2)
         self.histogram_options_layout.addWidget(self.errorLabel, 1, 4, 1, 2)
 
