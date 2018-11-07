@@ -3,3 +3,4 @@ __pychache__
 .idea
 *.pyc
 energy.db
+/smartmeter_gui.egg-info
