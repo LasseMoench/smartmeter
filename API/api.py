@@ -39,13 +39,23 @@ def render_html():
     # Time it took to consume 13.3Wh extrapolated to hourly energy use
     current_power = float('%.2f' % (13.33333 / time_diff_secs * 3600))
 
-    c.execute("SELECT * FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
-    histogram_data = c.fetchall()
+    c.execute("SELECT timestamp FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
+    rows = c.fetchall()
+
+    data_points = []
+
+    for i in range(288):
+        c.execute("SELECT Count(*) FROM energy WHERE timestamp > {} AND timestamp < {}".format(
+            midnight.timestamp() + i*300, midnight.timestamp() + i*300 + 300))
+        data_point_count = c.fetchone()[0]
+        if data_point_count > 0:
+            # Timestamp at middle of 5 minute interval, average power usage in W
+            data_points.append([midnight.timestamp()+i*300+150, int(data_point_count * 13.33333 * 12)])
 
     headers = {'Content-Type': 'text/html'}
 
     return make_response(render_template('index.html', current_power=current_power, total_power=total_power,
-                                         daily_power=daily_power, histogram_data=json.dumps(histogram_data)), 200,
+                                         daily_power=daily_power, data_points=json.dumps(data_points)), 200,
                          headers)
 
 

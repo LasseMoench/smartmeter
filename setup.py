@@ -33,7 +33,7 @@ setup(
     author='Lasse Moench, Shashwat Sridhar',
     author_email='shashwat.sridhar.95@gmail.com',
     install_requires=install_requirements,
-    description='Python based tool for displaying power consumption data from a remote mysql database.',
+    description='Python based tool for displaying power consumption data from a remote sqlite database.',
     long_description=readme(),
     scripts=['scripts/smartmeter_gui'],
     classifiers=[
