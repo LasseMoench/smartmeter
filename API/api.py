@@ -44,14 +44,18 @@ def render_html():
 
     data_points = []
 
-    for i in range(288):
-        c.execute("SELECT Count(*) FROM energy WHERE timestamp > {} AND timestamp < {}".format(
-            midnight.timestamp() + i*300, midnight.timestamp() + i*300 + 300))
-        data_point_count = c.fetchone()[0]
-        if data_point_count > 0:
-            # Timestamp at middle of 5 minute interval, average power usage in W
-            data_points.append([midnight.timestamp()+i*300+150, int(data_point_count * 13.33333 * 12)])
+    c.execute("SELECT * FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
 
+    data_rows = c.fetchall()
+
+    for i in range(1, len(data_rows)):
+        seconds = data_rows[i][0] - data_rows[i-1][0]
+        watt = int(13.33333 / seconds * 3600)
+        timestamp_avg = (data_rows[i][0] + data_rows[i-1][0]) / 2
+        data_points.append([timestamp_avg, watt])
+
+    print(data_points)
+    
     headers = {'Content-Type': 'text/html'}
 
     return make_response(render_template('index.html', current_power=current_power, total_power=total_power,

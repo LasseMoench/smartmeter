@@ -6,6 +6,7 @@ int withLed = 0;
 int withoutLed = 0;
 int stripeCount = 0;
 int diff = 0;
+unsigned long lastTick = 0;
 WiFiClient client;
 
 const int threshold = 150;
@@ -57,8 +58,8 @@ void loop() {
 //    Serial.print("Difference is: ");
 //    Serial.println(diff);
 
-    //We are detecting a stripe!
-    if(diff < threshold){
+    //We are detecting a stripe! (Reality check: last tick was at least 1 sec ago -> less than 50kW usage)
+    if(diff < threshold && millis - lastTick > 1000){
       stripeCount++;
     }
 
@@ -83,6 +84,7 @@ void loop() {
         }
         client.stop();
         Serial.println("\n[Disconnected]");
+        lastTick = millis();
       }else{
         // connection failure
         Serial.println("Connection to tick-API failed!");        
