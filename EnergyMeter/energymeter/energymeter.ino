@@ -59,7 +59,7 @@ void loop() {
 //    Serial.println(diff);
 
     //We are detecting a stripe! (Reality check: last tick was at least 1 sec ago -> less than 50kW usage)
-    if(diff < threshold && millis - lastTick > 1000){
+    if(diff < threshold && millis() - lastTick > 1000){
       stripeCount++;
     }
 
