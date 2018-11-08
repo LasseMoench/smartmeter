@@ -1,11 +1,13 @@
+import os
+import sqlite3
+import sys
+
 import numpy as np
 from pyqtgraph.Qt import QtCore, QtGui
-import sys, os
-import sqlite3
 
+from GUI.helper_classes import Task
 from GUI.plot_widgets import MainPlot
 from GUI.tool_widgets import MainToolBox
-from GUI.helper_classes import Task
 
 
 class Main(QtGui.QMainWindow):
@@ -16,7 +18,7 @@ class Main(QtGui.QMainWindow):
         if local_db_path is not None:
             self.database_path = local_db_path
         else:
-            self.database_path = "/home/sridhar/PycharmProjects/smartmeter/API/energy.db"
+            self.database_path = "API/energy.db"
 
         if not os.path.exists(self.database_path):
             print("Invalid/non-existent database file requested, quitting!", file=sys.stderr)

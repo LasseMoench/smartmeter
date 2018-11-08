@@ -19,12 +19,11 @@ with open("GUI/version.py") as fp:
 install_requirements = ['numpy',
                         'PyQt5',
                         'pyqtgraph',
-                        'tzlocal',
-                        'pytz'
+                        'tzlocal'
                         ]
 
 setup(
-    name='smartmeter_gui',
+    name='smartmeter-gui',
     version=smartmeter_version,
     packages=['GUI'],
     url='https://github.com/LasseMoench/smartmeter',
@@ -35,7 +34,10 @@ setup(
     install_requires=install_requirements,
     description='Python based tool for displaying power consumption data from a remote mysql database.',
     long_description=readme(),
-    scripts=['scripts/smartmeter_gui'],
+    entry_points='''
+                [console_scripts]
+                smartmeter-gui=GUI.start:launch
+            ''',
     classifiers=[
                     'Development Status :: 2 - Pre-Alpha',
                     'Environment :: X11 Applications :: Qt',
