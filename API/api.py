@@ -54,7 +54,7 @@ def render_html():
         timestamp_avg = (data_rows[i][0] + data_rows[i-1][0]) / 2
         data_points.append([timestamp_avg, watt])
 
-    print(data_points)
+    # print(data_points)
     
     headers = {'Content-Type': 'text/html'}
 
