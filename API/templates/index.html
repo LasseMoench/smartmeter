@@ -5,46 +5,45 @@
     <title>Bergerhöhle Energy Consumption</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
+      console.log("Hello world!");
+      console.log({{ data_points }});
+
+      datapoints = {{ data_points }}
+
       google.charts.load("current", {packages:["corechart"]});
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Dinosaur', 'Length'],
-          ['Acrocanthosaurus (top-spined lizard)', 12.2],
-          ['Albertosaurus (Alberta lizard)', 9.1],
-          ['Allosaurus (other lizard)', 12.2],
-          ['Apatosaurus (deceptive lizard)', 22.9],
-          ['Archaeopteryx (ancient wing)', 0.9],
-          ['Argentinosaurus (Argentina lizard)', 36.6],
-          ['Baryonyx (heavy claws)', 9.1],
-          ['Brachiosaurus (arm lizard)', 30.5],
-          ['Ceratosaurus (horned lizard)', 6.1],
-          ['Coelophysis (hollow form)', 2.7],
-          ['Compsognathus (elegant jaw)', 0.9],
-          ['Deinonychus (terrible claw)', 2.7],
-          ['Diplodocus (double beam)', 27.1],
-          ['Dromicelomimus (emu mimic)', 3.4],
-          ['Gallimimus (fowl mimic)', 5.5],
-          ['Mamenchisaurus (Mamenchi lizard)', 21.0],
-          ['Megalosaurus (big lizard)', 7.9],
-          ['Microvenator (small hunter)', 1.2],
-          ['Ornithomimus (bird mimic)', 4.6],
-          ['Oviraptor (egg robber)', 1.5],
-          ['Plateosaurus (flat lizard)', 7.9],
-          ['Sauronithoides (narrow-clawed lizard)', 2.0],
-          ['Seismosaurus (tremor lizard)', 45.7],
-          ['Spinosaurus (spiny lizard)', 12.2],
-          ['Supersaurus (super lizard)', 30.5],
-          ['Tyrannosaurus (tyrant lizard)', 15.2],
-          ['Ultrasaurus (ultra lizard)', 30.5],
-          ['Velociraptor (swift robber)', 1.8]]);
+        var data = new google.visualization.DataTable();
+        data.addColumn('datetime', 'Time of Day');
+        data.addColumn('number', 'Energy in W');
+        datapoints.forEach(function(data_point){
+           data.addRow([new Date(data_point[0]*1000), data_point[1]])
+        });
+
+        midnight_today = new Date();
+        midnight_today.setHours(0,0,0,0);
+
+        midnight_tomorrow = new Date();
+        midnight_tomorrow.setHours(24,0,0,0);
 
         var options = {
-          title: 'Lengths of dinosaurs, in meters',
+          animation: {
+              duration: 2000,
+              startup: true
+          },
+          chartArea: { width: '90%' },
+          title: 'Power consumption today',
           legend: { position: 'none' },
+          vAxis: { title: 'Power in W' },
+          hAxis: {
+              title: 'Time',
+              format: 'HH:mm',
+              minValue: midnight_today,
+              maxValue: midnight_tomorrow
+          },
         };
 
-        var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
     </script>
@@ -53,7 +52,10 @@
 <h1>Bergerh&ouml;hle Energy Consumption</h1>
 This is a frontend prototype and it needs more design work :)<br><br>
 Current power consumption: <b>{{current_power}}</b> W<br>
-Daily power: <b>{{daily_power}}</b> Wh<br>
-Total power: <b>{{'%.2f' % (total_power / 1000)}}</b> kWh
+Daily power consumption: <b>{{daily_power}}</b> Wh<br>
+Total power consumption: <b>{{'%.2f' % (total_power / 1000)}}</b> kWh
+<p>
+<div id="chart_div"></div>
+</p>
 </body>
 </html>

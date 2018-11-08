@@ -15,7 +15,7 @@ paths:
         200:
           description: Successful tick
 
-  /energyinfo:
+  /:
     get:
       summary: Get an html website to show some info
       operationId: api.render_html
