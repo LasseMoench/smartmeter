@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Bergerhöhle Energy Consumption</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       console.log("Hello world!");
@@ -31,7 +33,9 @@
               duration: 2000,
               startup: true
           },
-          chartArea: { width: '90%' },
+          chartArea: {
+              width: '90%',
+              left: '5%'},
           title: 'Power consumption today',
           legend: { position: 'none' },
           vAxis: { title: 'Power in W' },
@@ -49,13 +53,37 @@
     </script>
 </head>
 <body>
-<h1>Bergerh&ouml;hle Energy Consumption</h1>
-This is a frontend prototype and it needs more design work :)<br><br>
-Current power consumption: <b>{{current_power}}</b> W<br>
-Daily power consumption: <b>{{daily_power}}</b> Wh<br>
-Total power consumption: <b>{{'%.2f' % (total_power / 1000)}}</b> kWh
+<h1 align="center">Bergerh&ouml;hle Energy Consumption</h1>
+<div class="container">
+  <div class="card-deck mb-3 text-center">
+    <div class="card mb-4 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Current Power Consumption</h4>
+      </div>
+      <div class="card-body">
+        <b>{{current_power}} W</b>
+      </div>
+    </div>
+    <div class="card mb-4 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Today's Power Consumption</h4>
+      </div>
+      <div class="card-body">
+        <b>{{daily_power}} Wh</b>
+      </div>
+    </div>
+    <div class="card mb-4 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Meter Reading</h4>
+      </div>
+      <div class="card-body">
+        <b>{{'%.2f' % (total_power / 1000)}} kWh</b>
+      </div>
+    </div>
+  </div>
+</div>
 <p>
-<div id="chart_div"></div>
+<div id="chart_div" style="display: block; margin: 0 auto"></div>
 </p>
 </body>
 </html>
