@@ -63,6 +63,15 @@ def render_html():
                          headers)
 
 
+def get_lcd_info():
+    midnight = datetime.combine(datetime.today(), dttime.min)
+    c.execute("SELECT Count(*) FROM energy WHERE timestamp > {}".format(midnight.timestamp()))
+    ticks_today = c.fetchone()
+    daily_power = float('%.2f' % (ticks_today[0] * 13.33333))
+
+    return daily_power
+
+
 app = connexion.App(__name__)
 app.add_api('api.yaml')
 

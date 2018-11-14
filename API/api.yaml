@@ -22,3 +22,11 @@ paths:
       responses:
         200:
           description: Successful request
+
+  /lcdinfo:
+    get:
+      summary: Get today's energy consumption to show on an lcd screen
+      operationId: api.get_lcd_info
+      responses:
+        200:
+          description: Successful response
