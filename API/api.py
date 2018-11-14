@@ -8,6 +8,8 @@ import json
 conn = sqlite3.connect('energy.db')
 c = conn.cursor()
 c.execute('CREATE TABLE IF NOT EXISTS energy(timestamp INTEGER)')
+c.execute('CREATE TABLE IF NOT EXISTS connection_loss(timestamp INTEGER, duration INTEGER)')
+conn.commit()
 
 
 def tick():
@@ -70,6 +72,17 @@ def get_lcd_info():
     daily_power = float('%.2f' % (ticks_today[0] * 13.33333))
 
     return daily_power
+
+
+def count_connection_loss(duration):
+    ts = time.time()
+    print("ESP has regained connection! Time: {}".format(datetime.utcfromtimestamp(ts).strftime(
+        '%H:%M:%S %d-%m-%Y')))
+
+    int(float(duration) / 1000)
+
+    c.execute("INSERT INTO connection_loss VALUES ({}, {})".format(ts, duration))
+    conn.commit()
 
 
 app = connexion.App(__name__)

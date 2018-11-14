@@ -30,3 +30,21 @@ paths:
       responses:
         200:
           description: Successful response
+
+  /connloss/{duration}:
+    get:
+      summary: Count a connection loss
+      operationId: api.count_connection_loss
+      parameters:
+        - $ref: '#/parameters/duration'
+      responses:
+        200:
+          description: Connection loss counted
+
+parameters:
+  duration:
+    name: duration
+    description: Duration of connection loss in milliseconds
+    in: path
+    type: string
+    required: true

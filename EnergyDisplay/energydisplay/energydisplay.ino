@@ -43,7 +43,7 @@ void setup() {
 }
 
 void loop() {
-  lcd.backlight();
+  
   if (client.connect(apiIP, 80)){
     // we are connected to the host!
     client.print(String("GET /lcdinfo") + " HTTP/1.1\r\n" +
@@ -78,7 +78,5 @@ void loop() {
     // connection failure
     Serial.println("Connection to tick-API failed!");        
   }
-  delay(5000);
-  lcd.backlight();
   delay(30000);
 }
