@@ -31,12 +31,13 @@ paths:
         200:
           description: Successful response
 
-  /connloss/{duration}:
+  /connloss/{duration}/{ticks_missed}:
     get:
       summary: Count a connection loss
       operationId: api.count_connection_loss
       parameters:
         - $ref: '#/parameters/duration'
+        - $ref: '#/parameters/ticks_missed'
       responses:
         200:
           description: Connection loss counted
@@ -45,6 +46,12 @@ parameters:
   duration:
     name: duration
     description: Duration of connection loss in milliseconds
+    in: path
+    type: string
+    required: true
+  ticks_missed:
+    name: ticks_missed
+    description: Number of ticks missed during disconnect
     in: path
     type: string
     required: true

@@ -10,6 +10,7 @@ bool disconn = false;
 unsigned long disconnTime = 0;
 unsigned long duration = 0;
 unsigned long lastTick = 0;
+int ticksMissed = 0;
 WiFiClient client;
 
 const int threshold = 150;
@@ -38,6 +39,7 @@ void loop() {
   if (WiFi.status() != WL_CONNECTED && !disconn) {
       disconn = true;
       disconnTime = millis();
+      Serial.println("Lost WiFi connection!");
     };
 
   if (WiFi.status() == WL_CONNECTED && disconn) {
@@ -47,7 +49,7 @@ void loop() {
       //Report the disconnect to the API
       if (client.connect(apiIP, 80)){
         // we are connected to the host!
-        client.print(String("GET /connloss/")+ disconnTime + "/ HTTP/1.1\r\n" +
+        client.print(String("GET /connloss/")+ disconnTime + "/" + ticksMissed + " HTTP/1.1\r\n" +
              "Host: " + apiIP + "\r\n" +
              "Connection: close\r\n" +
              "\r\n"
@@ -61,7 +63,7 @@ void loop() {
         }
         client.stop();
         Serial.println("\n[Disconnected]");
-        lastTick = millis();
+        ticksMissed = 0;
       }else{
         // connection failure
         Serial.println("Connection to API failed!");        
@@ -120,7 +122,8 @@ void loop() {
       lastTick = millis();
     }else{
       // connection failure
-      Serial.println("Connection to tick-API failed!");        
+      Serial.println("Connection to tick-API failed!");    
+      ticksMissed++;    
     }
   }
 

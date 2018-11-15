@@ -8,7 +8,7 @@ import json
 conn = sqlite3.connect('energy.db')
 c = conn.cursor()
 c.execute('CREATE TABLE IF NOT EXISTS energy(timestamp INTEGER)')
-c.execute('CREATE TABLE IF NOT EXISTS connection_loss(timestamp INTEGER, duration INTEGER)')
+c.execute('CREATE TABLE IF NOT EXISTS connection_loss(timestamp INTEGER, duration INTEGER, ticks_missed INTEGER)')
 conn.commit()
 
 
@@ -71,17 +71,27 @@ def get_lcd_info():
     ticks_today = c.fetchone()
     daily_power = float('%.2f' % (ticks_today[0] * 13.33333))
 
-    return daily_power
+    c.execute("SELECT * FROM energy ORDER BY energy._ROWID_ DESC LIMIT 2")
+    last_2_timestamps = c.fetchall()
+
+    time_diff_secs = last_2_timestamps[0][0] - last_2_timestamps[1][0]
+
+    # Time it took to consume 13.3Wh extrapolated to hourly energy use
+    current_power = int(13.33333 / time_diff_secs * 3600)
+
+    result = {"daily_power": daily_power, "current_power": current_power}
+
+    return result
 
 
-def count_connection_loss(duration):
+def count_connection_loss(duration, ticks_missed):
     ts = time.time()
     print("ESP has regained connection! Time: {}".format(datetime.utcfromtimestamp(ts).strftime(
         '%H:%M:%S %d-%m-%Y')))
 
-    int(float(duration) / 1000)
+    duration_in_s = int(float(duration) / 1000)
 
-    c.execute("INSERT INTO connection_loss VALUES ({}, {})".format(ts, duration))
+    c.execute("INSERT INTO connection_loss VALUES ({}, {}, {})".format(ts, duration_in_s, ticks_missed))
     conn.commit()
 
 

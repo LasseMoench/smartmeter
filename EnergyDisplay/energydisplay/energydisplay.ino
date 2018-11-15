@@ -1,37 +1,37 @@
-#include <LiquidCrystal_I2C.h>
+#include <ArduinoJson.h>
+
+#include <Wire.h>  // Only needed for Arduino 1.6.5 and earlier
+#include "SSD1306Wire.h" // legacy include: `#include "SSD1306.h"`
+
 #include <ESP8266WiFi.h>
 
-// Construct an LCD object and pass it the 
-// I2C address, width (in characters) and
-// height (in characters). Depending on the
-// Actual device, the IC2 address may change.
-LiquidCrystal_I2C lcd(0x3F, 16, 2);
+// Initialize the OLED display using Wire library
+SSD1306Wire  display(0x3c, D2, D1);
+// SH1106 display(0x3c, D3, D5);
 
 const char* ssid = "Bergernetz"; // your wireless network name (SSID)
 const char* password = "GrummelKeks1"; // your Wi-Fi network password
 const char* apiIP = "192.168.0.38";
 WiFiClient client;
+StaticJsonBuffer<200> jsonBuffer;
 String result;
-int lcdpos = 0;
 
 void setup() {
   Serial.begin(115200);
-
-  // The begin call takes the width and height. This
-  // Should match the number provided to the constructor.
-  lcd.begin(16,2);
-  lcd.init();
-
-  // Turn on the backlight.
-  lcd.backlight();
-
-  // Move the cursor characters to the right and
-  // zero characters down (line 1).
-  lcd.setCursor(0, 0);
-
-  // Print HELLO to the screen, starting at 5,0.
-  lcd.print("Connecting...");
   
+  // Initialising the UI will init the display too.
+  display.init();
+
+  display.flipScreenVertically();
+  display.setFont(ArialMT_Plain_10);
+
+  display.clear();
+  
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setFont(ArialMT_Plain_16);
+  display.drawString(64, 24, "Connecting...");
+  display.display();
+
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
 
@@ -40,10 +40,10 @@ void setup() {
     Serial.print(".");
   }
   Serial.println("Connected to WiFi!");
+  display.clear();
 }
 
 void loop() {
-  
   if (client.connect(apiIP, 80)){
     // we are connected to the host!
     client.print(String("GET /lcdinfo") + " HTTP/1.1\r\n" +
@@ -58,22 +58,37 @@ void loop() {
         Serial.println(result);
       }
     }
+
+    JsonObject& root = jsonBuffer.parseObject(result);
+
+    String wh = root["daily_power"];
+    String current = root["current_power"];
+
+    if(!root.success()) {
+      Serial.println("parseObject() failed");
+    }
+    
+    display.clear();
+    display.setFont(ArialMT_Plain_10);
+    display.setTextAlignment(TEXT_ALIGN_LEFT);
+    display.drawString(0, 0, "Now:");
+    display.setTextAlignment(TEXT_ALIGN_RIGHT);
+    display.drawString(128, 0, current + "W");
+    display.setTextAlignment(TEXT_ALIGN_LEFT);
+    display.drawString(0, 16, "Today:");
+    display.setTextAlignment(TEXT_ALIGN_RIGHT);
+    display.drawString(128, 16, wh + "Wh");
+    float daily = root["daily_power"];
+    float cost = 0.0002775 * daily;
+    String coststr = String(cost);
+    display.setTextAlignment(TEXT_ALIGN_LEFT);
+    display.drawString(0, 32, "Cost:");
+    display.setTextAlignment(TEXT_ALIGN_RIGHT);
+    display.drawString(128, 32, coststr + "€");
+    display.display();
     client.stop();
     Serial.println("\n[Disconnected]");
-    float wh = result.toFloat();
-    int lcdpos = 13 - result.length();
-    lcd.clear();
-    lcd.setCursor(lcdpos,0);
-    lcd.print(result);
-    lcd.setCursor(14,0);
-    lcd.print("Wh");
-    float cost = 0.0002775 * wh;
-    String coststr = String(cost);    
-    lcdpos = 12 - coststr.length();
-    lcd.setCursor(lcdpos, 1);
-    lcd.print(coststr);
-    lcd.setCursor(13, 1);
-    lcd.print("EUR");
+
   }else{
     // connection failure
     Serial.println("Connection to tick-API failed!");        
