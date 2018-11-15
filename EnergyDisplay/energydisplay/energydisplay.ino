@@ -13,7 +13,7 @@ const char* ssid = "Bergernetz"; // your wireless network name (SSID)
 const char* password = "GrummelKeks1"; // your Wi-Fi network password
 const char* apiIP = "192.168.0.38";
 WiFiClient client;
-StaticJsonBuffer<200> jsonBuffer;
+StaticJsonBuffer<300> jsonBuffer;
 String result;
 
 void setup() {

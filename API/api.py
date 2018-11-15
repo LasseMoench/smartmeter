@@ -81,7 +81,7 @@ def get_lcd_info():
 
     result = {"daily_power": daily_power, "current_power": current_power}
 
-    return result
+    return json.dumps(result)
 
 
 def count_connection_loss(duration, ticks_missed):
