@@ -12,9 +12,10 @@ SSD1306Wire  display(0x3c, D2, D1);
 const char* ssid = "Bergernetz"; // your wireless network name (SSID)
 const char* password = "GrummelKeks1"; // your Wi-Fi network password
 const char* apiIP = "192.168.0.38";
+String json = "{\"daily_power\": 9200.0, \"current_power\": 2358}";
+String result;
 WiFiClient client;
 StaticJsonBuffer<300> jsonBuffer;
-String result;
 
 void setup() {
   Serial.begin(115200);
@@ -54,8 +55,9 @@ void loop() {
     Serial.println("Request info from API!");
     while (client.connected()){
       if (client.available()){
-        result = client.readStringUntil('\n');
+        String result = String(client.readStringUntil('}'));
         Serial.println(result);
+        Serial.println(json);
       }
     }
 
@@ -84,7 +86,7 @@ void loop() {
     display.setTextAlignment(TEXT_ALIGN_LEFT);
     display.drawString(0, 32, "Cost:");
     display.setTextAlignment(TEXT_ALIGN_RIGHT);
-    display.drawString(128, 32, coststr + "€");
+    display.drawString(128, 32, coststr + "EUR");
     display.display();
     client.stop();
     Serial.println("\n[Disconnected]");
