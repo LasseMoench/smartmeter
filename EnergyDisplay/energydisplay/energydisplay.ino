@@ -4,6 +4,7 @@
 #include "SSD1306Wire.h" // legacy include: `#include "SSD1306.h"`
 
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
 
 // Initialize the OLED display using Wire library
 SSD1306Wire  display(0x3c, D2, D1);
@@ -11,11 +12,9 @@ SSD1306Wire  display(0x3c, D2, D1);
 
 const char* ssid = "Bergernetz"; // your wireless network name (SSID)
 const char* password = "GrummelKeks1"; // your Wi-Fi network password
-const char* apiIP = "192.168.0.38";
-String json = "{\"daily_power\": 9200.0, \"current_power\": 2358}";
+const char host[] = "http://192.168.0.38/lcdinfo";
 String result;
 WiFiClient client;
-StaticJsonBuffer<300> jsonBuffer;
 
 void setup() {
   Serial.begin(115200);
@@ -45,55 +44,46 @@ void setup() {
 }
 
 void loop() {
-  if (client.connect(apiIP, 80)){
-    // we are connected to the host!
-    client.print(String("GET /lcdinfo") + " HTTP/1.1\r\n" +
-         "Host: " + apiIP + "\r\n" +
-         "Connection: close\r\n" +
-         "\r\n"
-        );
-    Serial.println("Request info from API!");
-    while (client.connected()){
-      if (client.available()){
-        String result = String(client.readStringUntil('}'));
-        Serial.println(result);
-        Serial.println(json);
-      }
-    }
 
-    JsonObject& root = jsonBuffer.parseObject(result);
+  HTTPClient http;
+  http.begin(host);
+  int statusCode = http.GET();
+  result = http.getString();
+  Serial.println(result);
+  Serial.println(statusCode);
+  Serial.println(http.errorToString(statusCode).c_str());
+  http.end();
 
-    String wh = root["daily_power"];
-    String current = root["current_power"];
+  
+  StaticJsonBuffer<200> jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(result);
 
-    if(!root.success()) {
-      Serial.println("parseObject() failed");
-    }
-    
-    display.clear();
-    display.setFont(ArialMT_Plain_10);
-    display.setTextAlignment(TEXT_ALIGN_LEFT);
-    display.drawString(0, 0, "Now:");
-    display.setTextAlignment(TEXT_ALIGN_RIGHT);
-    display.drawString(128, 0, current + "W");
-    display.setTextAlignment(TEXT_ALIGN_LEFT);
-    display.drawString(0, 16, "Today:");
-    display.setTextAlignment(TEXT_ALIGN_RIGHT);
-    display.drawString(128, 16, wh + "Wh");
-    float daily = root["daily_power"];
-    float cost = 0.0002775 * daily;
-    String coststr = String(cost);
-    display.setTextAlignment(TEXT_ALIGN_LEFT);
-    display.drawString(0, 32, "Cost:");
-    display.setTextAlignment(TEXT_ALIGN_RIGHT);
-    display.drawString(128, 32, coststr + "EUR");
-    display.display();
-    client.stop();
-    Serial.println("\n[Disconnected]");
+  String wh = root["daily_power"];
+  String current = root["current_power"];
 
-  }else{
-    // connection failure
-    Serial.println("Connection to tick-API failed!");        
+  if(!root.success()) {
+    Serial.println("parseObject() failed");
   }
+  
+  display.clear();
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.drawString(0, 0, "Now:");
+  display.setTextAlignment(TEXT_ALIGN_RIGHT);
+  display.drawString(128, 0, current + "W");
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.drawString(0, 16, "Today:");
+  display.setTextAlignment(TEXT_ALIGN_RIGHT);
+  display.drawString(128, 16, wh + "Wh");
+  float daily = root["daily_power"];
+  float cost = 0.0002775 * daily;
+  String coststr = String(cost);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.drawString(0, 32, "Cost:");
+  display.setTextAlignment(TEXT_ALIGN_RIGHT);
+  display.drawString(128, 32, coststr + "EUR");
+  display.display();
+  client.stop();
+
   delay(30000);
 }
