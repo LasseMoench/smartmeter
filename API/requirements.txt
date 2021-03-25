@@ -13,7 +13,7 @@ Jinja2==2.10
 jsonschema==2.6.0
 MarkupSafe==1.0
 pytz==2018.7
-PyYAML==3.13
+PyYAML==5.4
 requests==2.20.0
 six==1.11.0
 swagger-spec-validator==2.4.1
